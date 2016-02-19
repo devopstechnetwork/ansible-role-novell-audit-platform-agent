@@ -1,2 +1,9 @@
 ---
 # defaults file for novell-audit-platform-agent
+
+software_repository_path: /software
+
+novell_audit_server: "sentinel.example.com"
+novell_audit_port: 1289
+novell_audit_user: root
+novell_audit_group: idvadmin

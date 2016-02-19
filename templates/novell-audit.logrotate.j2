@@ -1,0 +1,11 @@
+/var/opt/novell/naudit/*.log {
+    copytruncate
+    daily
+    dateext
+    rotate 30
+    compress
+    missingok
+    notifempty
+    su root {{ novell_audit_group }}
+}
+

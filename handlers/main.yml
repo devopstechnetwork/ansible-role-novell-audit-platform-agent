@@ -1,2 +1,10 @@
 ---
 # handlers file for novell-audit-platform-agent
+
+- name: kill lcache
+  command: /usr/bin/pkill lcache
+  ignore_errors: True
+  
+- name: kill jlcache
+  command: /usr/bin/pkill -f com.novell.naudit.lcache.LCache
+  ignore_errors: True

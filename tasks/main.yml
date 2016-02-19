@@ -1,2 +1,61 @@
 ---
 # tasks file for novell-audit-platform-agent
+
+- name: install Platform Agent on SLES
+  become: true
+  zypper: 
+    name='https://eu2idmcloud5049.blob.core.windows.net:443/software/novell-AUDTplatformagent-2.0.2-77.x86_64.rpm'
+    state=present
+    disable_gpg_check=yes
+  when: ansible_distribution == "SLES"
+ 
+- name: ensure novell_audit_group exists
+  become: true
+  group:
+    name="{{ novell_audit_group }}"
+    state=present
+ 
+- name: deploy logevent.conf
+  become: true
+  template: 
+    src=logevent.conf.j2 
+    dest=/etc/logevent.conf
+    owner=root 
+    group="{{ novell_audit_group }}" 
+    mode=0664 
+  tags:
+    - template
+  notify: 
+    - kill lcache
+    - kill jlcache
+    
+- name: deploy logrotate config
+  become: true
+  template: 
+    src=novell-audit.logrotate.j2 
+    dest=/etc/logrotate.d/novell-audit
+    owner=root 
+    group="{{ novell_audit_group }}"
+    mode=0664 
+
+- name: create cache directories
+  become: true
+  file:
+    path={{ item }}
+    state=directory
+    owner=root 
+    group="{{ novell_audit_group }}" 
+    mode=0660
+  with_items:
+    - /var/opt/novell/naudit/cache 
+    - /var/opt/novell/naudit/jcache
+   
+- name: set rights
+  become: true
+  file:
+    path=/var/opt/novell/naudit
+    state=directory
+    owner=root 
+    group="{{ novell_audit_group }}"
+    mode=0660
+    recurse=yes

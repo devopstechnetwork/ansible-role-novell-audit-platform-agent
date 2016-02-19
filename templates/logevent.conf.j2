@@ -1,0 +1,153 @@
+#
+# Novell Audit Platform Agent configuration
+#
+# LogHost                  - Specifies the IP address or DNS name of the Secure
+#                            Logging Server (SLS).
+#
+#                            Multiple Secure Logging Servers can be configured
+#                            by entering a comma separated list of addresses
+#                            with no spaces.  The first address listed is the
+#                            primary Server.  Additional addresses are attempted
+#                            sequentially if/when the preceding address cannot
+#                            be contacted.
+#
+#                            Example:  LogHost=10.1.1.1,10.1.1.2,10.1.1.3
+#
+#                            Default:  127.0.0.1
+#
+# LogCacheDir              - Specifies where C-Lcache will store its cache files.
+#
+#                            Default (Windows):  C:\Program Files\Novell\Nsure Audit\cache
+#                            Default (NetWare):  SYS:\ETC\logcache
+#                            Default (Solaris):  /opt/NOVLnaudit/cache
+#                            Default (Linux):	 /var/opt/novell/naudit/cache
+#
+# JLogCacheDir              - Specifies where java lcache will store its cache files.
+#
+#                            Default (Windows):  C:\Program Files\Novell\Nsure Audit\jcache
+#                            Default (NetWare):  SYS:\ETC\jlogcache
+#                            Default (Solaris):  /opt/NOVLnaudit/jcache
+#                            Default (Linux):    /var/opt/novell/naudit/jcache
+#
+# LogEnginePort            - Specifies the port on which the SLS/Sentinel will listen for
+#                            incoming connections.
+#
+#                            Default:  1289
+#
+# LogCachePort             - Specifies the port on which lcache will listen for
+#                            connections.
+#
+#                            Default:  1288
+#
+# JLogCachePort            - Specifies the port on which java lcache will listen for connections.
+#
+#                            Default:  1287
+#
+# LogCacheUnload           - Indicates whether lcache will allow itself to be
+#                            unloaded.  Set to 'no' to prevent unloading.
+#
+#                            Default:  yes
+#
+# LogCacheSecure           - Indicates whether lcache should encrypt its cache.
+#                            Set to 'yes' to enable cache encryption.
+#
+#                            Default:  no
+#
+# LogReconnectInterval     - Specify, in seconds, how often lcache and the
+#                            platform agent should attempt to reconnect to the
+#                            Server if the connection is interrupted. 
+#
+#                            Default:  30
+#
+# LogDebug                 - Specifies when and how to manage debug events.
+#                            Set to 'never' to prevent debug events from being
+#                            logged.  Set to 'always' to force the logging
+#                            of debug events.  Omit or set to 'server' to use
+#                            the default setting provided by the Secure Log
+#                            Server.
+#
+#                            Default:  never
+#
+# LogSigned                - Indicates whether events should be signed when
+#                            logged.  Set to 'never' to prevent event signing.
+#                            Set to 'always' to force the logging of events
+#                            with a signature.  Omit or set to 'server' to use
+#                            the default setting provided by the Secure Log
+#                            Server.
+#
+#                            Default:  never
+#
+# LogMaxBigData            - Specify, in bytes, the size of an event's data
+#                            field to be larger than the default value of 3072
+#                            bytes.  This should be set to the maximum number
+#                            of bytes that this client will allow.  Data fields
+#                            larger than this size will be truncated.  The data
+#                            may not be transmitted at all if the application
+#                            does not allow truncated events to be logged.
+#
+#                            Default:  3072
+#
+# LogCacheLimitAction      - This specifies the action that will be enacted
+#                            when the cache file has reached its maximum size
+#                            limit (see above).  Set to 'stop logging' if event
+#                            collection should be halted.  Set to 'drop cache'
+#                            if you want to reset (delete) the cache file. 
+#                            This setting is ignored if LogMaxCacheSize is not
+#                            specified. Set to 'roll cache' if you want to create 
+#                            multiple cache files of 2MB under backup folder.
+#
+#                            Default:  (unspecified, no action)
+#
+# LogMaxCacheSize          - Specify, in bytes, the maximum size of a cache
+#                            file is 2GB.  If not specified, the log cache file will
+#                            continue to grow till 2GB.
+#
+#                            Default:  (unspecified, 2GB)
+#
+#                            Note:  Ensure that this setting is specified after 
+#                            LogCacheLimitAction is set to 'roll cache', because the 
+#                            'roll cache' option resets the LogMaxCacheSize to 2MB.
+#
+# LogForceCaching            Indicates whether events will be sent to the server
+#                            directly or always through the cache.
+#                            Set 'Y' if you want force caching.
+#
+#                            Default: (unspecified, N)
+#
+# ForceServerVersionNumber - If logging to a log server from Nsure Audit
+#                            version 1.0.x set this parameter to instruct the
+#                            Platform Agent to use a particular Secure Log
+#                            Server protocol version.
+#
+#                            Valid values are:  1.0.0, 1.0.1, 1.0.2, 1.0.3,
+#                            1.0.3.P1, 1.0.3.P2, and etc.  If using patches
+#                            from Nsure Audit 1.0.3, please indicate the patch
+#                            number being used:  P1, P2, P3, etc.
+#
+#                            Starting with Nsure Audit 1.0.3 Patch 2, the
+#                            Secure Log Server properly reports the protocol in
+#                            use and the Novell Audit 2.0.x Platform Agent will
+#                            automatically use the protocol reported by the
+#                            Secure Log Server.
+#
+# LogJavaClassPath -         If the pure Java Platform Agent is being used
+#                            (NAuditPA.jar), this path is added to the
+#                            Java classpath used in the Platform Agent when it 
+#                            starts the caching process (lcache). This will
+#                            allow caching to run if the Platform Agent
+#                            is running in a container that does not define a
+#                            classpath.
+#
+# NOTE:  Some options may not be available in all versions of Novell Audit.
+#
+LogHost={{ novell_audit_server }}
+LogCacheDir=/var/opt/novell/naudit/cache
+JLogCacheDir=/var/opt/novell/naudit/jcache
+LogEnginePort={{ novell_audit_port }}
+LogCachePort=1288
+JLogCachePort=1287
+LogCacheUnload=yes
+LogCacheSecure=no
+LogMaxBigData=8192
+LogJavaClassPath=/opt/novell/naudit/java/pa/NAuditPA.jar
+
