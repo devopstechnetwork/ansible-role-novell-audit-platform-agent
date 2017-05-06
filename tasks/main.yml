@@ -8,12 +8,16 @@
     state=present
     disable_gpg_check=yes
   when: ansible_distribution == "SLES"
+  tags:
+    - software
  
 - name: ensure novell_audit_group exists
   become: true
   group:
     name="{{ novell_audit_group }}"
     state=present
+  tags:
+    - groups
  
 - name: deploy logevent.conf
   become: true
@@ -23,11 +27,11 @@
     owner=root 
     group="{{ novell_audit_group }}" 
     mode=0664 
-  tags:
-    - template
   notify: 
     - kill lcache
     - kill jlcache
+  tags:
+    - template
     
 - name: deploy logrotate config
   become: true
@@ -37,25 +41,31 @@
     owner=root 
     group="{{ novell_audit_group }}"
     mode=0664 
+  tags:
+    - template
 
-- name: create cache directories
+- name: create naudit directories
   become: true
   file:
     path={{ item }}
     state=directory
     owner=root 
     group="{{ novell_audit_group }}" 
-    mode=0660
+    mode=0770
   with_items:
+    - /var/opt/novell/naudit
     - /var/opt/novell/naudit/cache 
     - /var/opt/novell/naudit/jcache
+  tags:
+    - rights
    
-- name: set rights
+- name: create nproduct.log
   become: true
   file:
-    path=/var/opt/novell/naudit
-    state=directory
+    path=/var/opt/novell/naudit/nproduct.log
+    state=present
     owner=root 
     group="{{ novell_audit_group }}"
     mode=0660
-    recurse=yes
+  tags:
+    - rights
